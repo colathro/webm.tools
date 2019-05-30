@@ -3,8 +3,10 @@
 @{
     ViewData["Title"] = "Home page";
 }
-
+<h1>@this.Model._cookie</h1>
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <form method="post" enctype="multipart/form-data">
+    <input type="file" asp-for="Upload" />
+    <input type="submit" />
+    </form>
 </div>
