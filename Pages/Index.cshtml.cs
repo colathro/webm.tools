@@ -15,7 +15,8 @@ namespace webm.tools.Pages
     {
         // Class Properties
         public string _cookie;
-        private IHostingEnvironment _environment;
+        public IHostingEnvironment _environment;
+        public string UserDirectory;
 
         [BindProperty]
         public IFormFile Upload { get; set; }
@@ -31,15 +32,21 @@ namespace webm.tools.Pages
             if (String.IsNullOrEmpty(this._cookie)){
                 HttpContext.Session.SetString("Test String", HttpContext.Session.Id);    
             }
+            if (!Directory.Exists(Path.Combine(_environment.ContentRootPath, "User Files", HttpContext.Session.Id)))
+            {
+                Directory.CreateDirectory(Path.Combine(_environment.ContentRootPath, "User Files", HttpContext.Session.Id));
+            }
+            UserDirectory = Path.Combine(_environment.ContentRootPath, "User Files", HttpContext.Session.Id);
         }
 
         public async Task OnPostAsync()
         {
-            var file = Path.Combine(_environment.ContentRootPath, "uploads", Upload.FileName);
+            var file = Path.Combine(_environment.ContentRootPath, "User Files",HttpContext.Session.Id, Upload.FileName);
             using (var fileStream = new FileStream(file, FileMode.Create))
             {
                 await Upload.CopyToAsync(fileStream);
             }
+            Response.Redirect(Request.Path);
         }
         
     }

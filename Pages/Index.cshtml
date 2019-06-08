@@ -1,12 +1,22 @@
 ﻿@page
 @model IndexModel
+@using System.IO
 @{
     ViewData["Title"] = "Home page";
 }
-<h1>@this.Model._cookie</h1>
+<h1>
+    Upload file here!
+</h1>
 <div class="text-center">
     <form method="post" enctype="multipart/form-data">
     <input type="file" asp-for="Upload" />
     <input type="submit" />
     </form>
 </div>
+
+<ul>
+        @foreach (var item in Directory.EnumerateFiles(Model.UserDirectory))
+        {
+            <li>@item</li>
+        }
+</ul>
