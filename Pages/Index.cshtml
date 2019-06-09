@@ -3,6 +3,7 @@
 @using System.IO
 @{
     ViewData["Title"] = "Home page";
+    SessionFiles sessionFiles = (SessionFiles)ViewData["SessionFiles"];
 }
 <h1>
     Upload file here!
@@ -15,8 +16,16 @@
 </div>
 
 <ul>
-        @foreach (var item in Directory.EnumerateFiles(Model.UserDirectory))
+        @foreach (var item in sessionFiles.UploadedList())
         {
-            <li>@item</li>
+            <li>
+                <div>
+                    @item 
+                    <form asp-page-handler="DownloadFile" method="post">
+                    <button class="btn btn-default">Download</button>
+                    <input type="hidden" name="file" value=@item />
+                    </form>
+                </div>
+            </li>
         }
 </ul>

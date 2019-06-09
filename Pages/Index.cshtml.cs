@@ -14,9 +14,10 @@ namespace webm.tools.Pages
     public class IndexModel : PageModel
     {
         // Class Properties
-        public string _cookie;
-        public IHostingEnvironment _environment;
-        public string UserDirectory;
+        private IHostingEnvironment _environment;
+        private string _cookie;
+
+        public SessionFiles _sessionFiles;
 
         [BindProperty]
         public IFormFile Upload { get; set; }
@@ -32,21 +33,31 @@ namespace webm.tools.Pages
             if (String.IsNullOrEmpty(this._cookie)){
                 HttpContext.Session.SetString("Test String", HttpContext.Session.Id);    
             }
-            if (!Directory.Exists(Path.Combine(_environment.ContentRootPath, "User Files", HttpContext.Session.Id)))
-            {
-                Directory.CreateDirectory(Path.Combine(_environment.ContentRootPath, "User Files", HttpContext.Session.Id));
-            }
-            UserDirectory = Path.Combine(_environment.ContentRootPath, "User Files", HttpContext.Session.Id);
+            this.SetupSessionFile();
+            this.SetupViewData();
         }
 
         public async Task OnPostAsync()
         {
-            var file = Path.Combine(_environment.ContentRootPath, "User Files",HttpContext.Session.Id, Upload.FileName);
-            using (var fileStream = new FileStream(file, FileMode.Create))
-            {
-                await Upload.CopyToAsync(fileStream);
-            }
+            this.SetupSessionFile();
+            await _sessionFiles.UploadFile(Upload);
             Response.Redirect(Request.Path);
+            this.SetupViewData();
+        }
+
+        public ActionResult OnPostDownloadFile(string file)
+        {
+            return File(file, "application/octet-stream", "Testfile.txt");
+        }
+
+        private void SetupSessionFile()
+        {
+            _sessionFiles = new SessionFiles(_environment.ContentRootPath, HttpContext.Session.Id);
+        }
+
+        private void SetupViewData()
+        {
+            ViewData["SessionFiles"] = _sessionFiles;
         }
         
     }
