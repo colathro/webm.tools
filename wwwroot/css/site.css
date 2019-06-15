@@ -58,3 +58,27 @@ body {
   height: 45px;
   line-height: 45px; /* Vertically center the text there */
 }
+
+
+
+/* Uploaded Files List Styling */
+
+.DownloadFilesGrid {
+  display: grid;
+}
+
+.UploadedFile{
+  background-color: lightgray;
+}
+
+.UploadedFile .FileForm {
+  float: right;
+}
+
+.UploadedFile .FileForm .DownloadButton {
+  
+}
+
+.UploadedFile form{
+  display: inline-block;
+}

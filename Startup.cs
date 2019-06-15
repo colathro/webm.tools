@@ -25,7 +25,7 @@ namespace webm.tools
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromSeconds(45);
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
             });
             services.AddMemoryCache();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

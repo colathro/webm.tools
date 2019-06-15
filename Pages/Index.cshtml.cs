@@ -47,7 +47,8 @@ namespace webm.tools.Pages
 
         public ActionResult OnPostDownloadFile(string file)
         {
-            return File(file, "application/octet-stream", "Testfile.txt");
+            this.SetupSessionFile();
+            return File(_sessionFiles.DownloadFile(file), "application/octet-stream", file);
         }
 
         private void SetupSessionFile()

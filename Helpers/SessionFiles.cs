@@ -14,10 +14,11 @@ namespace webm.tools.Pages
     {
         //private attributes
         private string _sessionId;
-        private string _environment;
+        public string _environment;
 
         // begin public attributes
-        public string UserDirectory;
+        public DirectoryInfo UserDirectory;
+        public FileInfo[] UserFiles;
 
         public SessionFiles(string environment, string sessionId)
         {
@@ -33,21 +34,34 @@ namespace webm.tools.Pages
             {
                 Directory.CreateDirectory(Path.Combine(_environment, "UserFiles", _sessionId));
             }
-            this.UserDirectory = Path.Combine(_environment, "UserFiles", _sessionId).ToString();
+            this.UserDirectory = new DirectoryInfo(Path.Combine(_environment, "UserFiles", _sessionId).ToString());
+            this.setupfiles();
+        }
+
+        private void setupfiles()
+        {
+            this.UserFiles = this.UserDirectory.GetFiles();
         }
 
         public async Task UploadFile(IFormFile aspFile)
         {
-            var file = Path.Combine(_environment, "UserFiles", _sessionId, aspFile.FileName);
-            using (var fileStream = new FileStream(file, FileMode.Create))
-            {
-                await aspFile.CopyToAsync(fileStream);
+            if (aspFile != null){
+                var file = Path.Combine(_environment, "UserFiles", _sessionId, aspFile.FileName);
+                using (var fileStream = new FileStream(file, FileMode.Create))
+                {
+                    await aspFile.CopyToAsync(fileStream);
+                }
             }
         }
 
-        public IEnumerable<string> UploadedList()
+        public byte[] DownloadFile(string file)
         {
-            return Directory.EnumerateFiles(this.UserDirectory);
+            return System.IO.File.ReadAllBytes(this.UserDirectory + "/" + file);
+        }
+
+        public FileInfo[] UploadedList()
+        {
+            return this.UserFiles;
         }
 
     }

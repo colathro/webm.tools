@@ -14,18 +14,16 @@
     <input type="submit" />
     </form>
 </div>
-
-<ul>
-        @foreach (var item in sessionFiles.UploadedList())
+<br>
+<div class="DownloadFilesGrid">
+        @foreach (FileInfo item in sessionFiles.UploadedList())
         {
-            <li>
-                <div>
-                    @item 
-                    <form asp-page-handler="DownloadFile" method="post">
-                    <button class="btn btn-default">Download</button>
-                    <input type="hidden" name="file" value=@item />
+                <div class="UploadedFile">
+                    @item.Name
+                    <form class="FileForm" asp-page-handler="DownloadFile" method="post">
+                    <button class="DownloadButton" class="btn btn-default">Download</button>
+                    <input type="hidden" name="file" value=@item.Name />
                     </form>
                 </div>
-            </li>
         }
-</ul>
+</div>
